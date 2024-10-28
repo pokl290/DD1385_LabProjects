@@ -1,4 +1,4 @@
-
+// MyButton.java
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +9,7 @@ public class MyButton extends JButton {
     private String textState2;
     private Color colorState1;
     private Color colorState2;
-    private boolean isState1;
+    private boolean isState;
 
     // Constructor
     public MyButton(String text1, String text2, Color color1, Color color2) {
@@ -17,7 +17,7 @@ public class MyButton extends JButton {
         this.textState2 = text2;
         this.colorState1 = color1;
         this.colorState2 = color2;
-        this.isState1 = true; // Start with state 1
+        this.isState = true; // Start with state 1
 
         // Set initial text and background color
         setText(textState1);
@@ -32,13 +32,13 @@ public class MyButton extends JButton {
 
     // Method to toggle the button's state
     public void toggleState() {
-        if (isState1) {
+        if (isState) {
             setText(textState2);
             setBackground(colorState2);
         } else {
             setText(textState1);
             setBackground(colorState1);
         }
-        isState1 = !isState1; // Toggle the state flag
+        isState = !isState; // Toggle the state flag
     }
 }

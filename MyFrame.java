@@ -1,54 +1,92 @@
-// MyFrame.java
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.*;
 
 // MyFrame class that extends JFrame
 public class MyFrame extends JFrame implements ActionListener {
 
+    private int numberButton;
     private MyButton[] buttons; // Array to hold multiple buttons
+    private ArrayList<String> stateOneText; // List for State 1 texts
+    private ArrayList<String> stateTwoText; // List for State 2 texts
 
     // Constructor
-    public MyFrame() {
+    public MyFrame(int amountButton, ArrayList<String> stateOneText, ArrayList<String> stateTwoText) {
+        this.numberButton = amountButton;
+        this.stateOneText = stateOneText;
+        this.stateTwoText = stateTwoText;
+
         // Set the title to the authors' names
-        super("Author: Kevin Lam & Allan Inma");
+        this.setTitle("Author: Allan & Kevin");
 
         // Set the default close operation
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set the background color to your favorite color
-        getContentPane().setBackground(Color.CYAN);
+        this.getContentPane().setBackground(Color.CYAN);
 
         // Create a layout for the frame
-        setLayout(new FlowLayout());
-        setSize(400,200);
+        this.setLayout(new FlowLayout());
+        this.setSize(400, 200);
 
-        // Add multiple MyButton components
-        buttons = new MyButton[2]; // Create two buttons
-        buttons[0] = new MyButton("State 1", "State 2", Color.GREEN, Color.RED);
-        buttons[1] = new MyButton("ON", "OFF", Color.BLUE, Color.ORANGE);
+        // Initialize and add MyButton components
+        buttons = new MyButton[amountButton]; // Create buttons array
 
-        // Add the buttons to the frame and set up action listeners
-        for (MyButton button : buttons) {
-            add(button); // Add button to the frame
-            button.addActionListener(this); // Connect ActionListener to buttons
+        // Loop through and initialize each button with corresponding state text
+        for (int i = 0; i < amountButton; i++) {
+            // Get the text from the lists
+            String state1 = stateOneText.get(i);
+            String state2 = stateTwoText.get(i);
+
+            // Create a MyButton with the correct text for both states
+            buttons[i] = new MyButton(state1, state2, Color.PINK, Color.BLUE);
+            add(buttons[i]); // Add button to the frame
+            buttons[i].addActionListener(this); // Connect ActionListener to buttons
         }
-
-        // Pack the frame to fit the buttons
 
         setVisible(true); // Make the frame visible
     }
 
-    // Implement actionPerformed to toggle button state
     @Override
     public void actionPerformed(ActionEvent e) {
-        MyButton button = (MyButton) e.getSource(); // Get the button that was clicked
-        button.toggleState(); // Toggle the state of the button
+        MyButton clickedButton = (MyButton) e.getSource(); // Get the button that was clicked
+
+        // Toggle all buttons except the clicked one
+        for (MyButton button : buttons) {
+            if (button != clickedButton) {
+                button.toggleState(); // Toggle the state of the other buttons
+            }
+        }
     }
 
     // Main method to run the program
     public static void main(String[] args) {
-        new MyFrame(); // Create an instance of MyFrame
+        // Check if command line arguments are provided
+        if (args.length < 2 || args.length % 2 != 1) {
+            System.out.println("Usage: java MyFrame <number_of_buttons> <state1_text1> <state2_text1> ... <state1_textN> <state2_textN>");
+            return;
+        }
+
+
+        // Extract number of buttons from the first argument
+        int amountButton = Integer.parseInt(args[0]);
+
+        // ArrayLists to hold button texts for the two states
+        ArrayList<String> stateOneText = new ArrayList<>();
+        ArrayList<String> stateTwoText = new ArrayList<>();
+
+        // Fill the stateOneText and stateTwoText lists
+        for (int i = 0; i < amountButton; i++) {
+            // Each button has two arguments (state1 and state2)
+            stateOneText.add(args[1 + 2 * i]); // State 1 text for button i
+            stateTwoText.add(args[2 + 2 * i]); // State 2 text for button i
+        }
+        new MyFrame(amountButton, stateOneText, stateTwoText);
+        // Create an instance of MyFrame
     }
+    
 }
+
+
